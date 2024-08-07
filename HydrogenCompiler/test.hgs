@@ -1,0 +1,75 @@
+import std;
+
+namespace test;
+
+interface IConvertableTo<T> {
+    ConvertTo<T>() -> T;
+}
+
+struct Vec<int TDim, T> implements IConvertableTo<string>
+    where T implements IConvertableTo<string>
+{
+    private _values: T[TDim];
+    
+    public constructor(params values: T[TDim]){
+        _values = values;
+}      
+    @operator("+")
+    public static add(lhs: Vec<TDim, T>, rhs: Vec<TDim, T>) -> Vec<TDim, T> {
+        let vec: Vec<TDim, T>;
+        
+        @optimize("expand", "vector")
+        for(let i = 0; i < TDim; ++i)
+            vec._values[i] = lhs._values[i] + rhs._values[i]; 
+        
+        return vec;
+    } 
+    @operator("-")
+        public static add(lhs: Vec<TDim, T>, rhs: Vec<TDim, T>) -> Vec<TDim, T> {
+            let vec: Vec<TDim, T>;
+            
+            @optimize("expand", "vector")
+            for(let i = 0; i < TDim; ++i)
+                vec._values[i] = lhs._values[i] - rhs._values[i]; 
+            
+            return vec;
+        } 
+    @operator("*")
+        public static add(lhs: Vec<TDim, T>, rhs: T) -> Vec<TDim, T> {
+            let vec: Vec<TDim, T>;
+            
+            @optimize("expand", "vector")
+            for(let i = 0; i < TDim; ++i)
+                vec._values[i] = lhs._values[i] * rhs; 
+            
+            return vec;
+        } 
+    @operator("/")
+        public static add(lhs: Vec<TDim, T>, rhs: Vec<TDim, T>) -> Vec<TDim, T> {
+            let vec: Vec<TDim, T>;
+            
+            @optimize("expand", "vector")
+            for(let i = 0; i < TDim; ++i)
+                vec._values[i] = lhs._values[i] /  rhs; 
+            
+            return vec;
+        }
+        public ConvertTo<string>() -> string {
+            return "\{ {} \}" % this._values.ConvertTo<string>();
+        }
+}
+
+type Vec3<T> = Vec<3, T>;
+type Vec2<T> = Vec<2, T>;
+type Vec4<T> = Vec<4, T>;
+
+type Vec3F = Vec3<float>;
+
+@entry
+fn main {
+    let vec1 = Vec3F(0, 0, 0), vec2 = Vec3F(0, 0, 0);
+    
+    vec1 = Vec3F(std::io::readln().split(',').ConvertTo<float[]>());
+    vec1 * 10 + vec2;
+    std::io::println(vec1);
+}
