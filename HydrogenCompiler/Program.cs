@@ -7,6 +7,7 @@ class Program
 {
     public static async Task<int> Main(params string[] args)
     {
+        
         var rootCommand = new RootCommand(
             description: "Hydrogen compiler.");
 
